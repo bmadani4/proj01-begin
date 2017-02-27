@@ -163,7 +163,6 @@ lock_create(const char *name)
 
 	spinlock_init(&lock->lk_lock);
         //sem->sem_count = initial_count;
-	lock-> busy = 0;
 	lock-> hold = NULL;
 
         // add stuff here as needed
