@@ -201,21 +201,23 @@ locktest(int nargs, char **args)
 	(void)args;
 
 	inititems();
-	kprintf("Starting lock test.........\n");
-		
+	kprintf("Starting lock test..............\n");
+
 	for (i=0; i<NTHREADS; i++) {
 		result = thread_fork("synchtest", NULL, locktestthread,
 				     NULL, i);
+		
 		if (result) {
 			panic("locktest: thread_fork failed: %s\n",
 			      strerror(result));
 		}
+		
 	}
 	for (i=0; i<NTHREADS; i++) {
+		
 		P(donesem);
 	}
-
-	kprintf("Lock test doneeeee.\n");
+	kprintf("Lock test done.\n");
 
 	return 0;
 }
@@ -232,9 +234,13 @@ cvtestthread(void *junk, unsigned long num)
 
 	for (i=0; i<NCVLOOPS; i++) {
 		lock_acquire(testlock);
+
 		while (testval1 != num) {
 			gettime(&ts1);
+
 			cv_wait(testcv, testlock);
+
+
 			gettime(&ts2);
 
 			/* ts2 -= ts1 */
@@ -258,12 +264,17 @@ cvtestthread(void *junk, unsigned long num)
 		 * loop a little while to make sure we can measure the
 		 * time waiting on the cv.
 		 */
+
 		for (j=0; j<3000; j++);
 
 		cv_broadcast(testcv, testlock);
+
 		lock_release(testlock);
+
 	}
+
 	V(donesem);
+
 }
 
 int
@@ -290,6 +301,7 @@ cvtest(int nargs, char **args)
 	}
 	for (i=0; i<NTHREADS; i++) {
 		P(donesem);
+		
 	}
 
 	kprintf("CV test done\n");
